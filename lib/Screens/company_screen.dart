@@ -12,15 +12,14 @@ class CompanyScreen extends StatefulWidget {
 }
 
 class _CompanyScreenState extends State<CompanyScreen> {
-  var notes = [];
-  List name = [];
+  List companiesData = [];
   bool isLoading = false;
   Future getData() async {
     var url = 'https://dbmsapi.herokuapp.com/api/company/getCompanies';
     var response = await http.get(Uri.parse(url));
 
     Map Data = json.decode(response.body);
-    name = Data["companies"];
+    companiesData = Data["companies"];
   }
 
   @override
@@ -32,6 +31,8 @@ class _CompanyScreenState extends State<CompanyScreen> {
       setState(() {
         isLoading = false;
       });
+    }).catchError((e) {
+      print(e.toString());
     });
     super.initState();
   }
@@ -39,6 +40,10 @@ class _CompanyScreenState extends State<CompanyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {},
+      ),
       appBar: AppBar(
         title: const Text("Companies"),
         backgroundColor: Colors.amber,
@@ -47,63 +52,90 @@ class _CompanyScreenState extends State<CompanyScreen> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : ListView.builder(
-              itemCount: name.length,
-              itemBuilder: (BuildContext context, int index) => Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => CompanyDetails(name[index]["name"],index)));
-                      },
-                      child: Card(
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Container(
+          : companiesData.isEmpty
+              ? const Center(
+                  child: Text("No Companies Available At This Moment"),
+                )
+              : RefreshIndicator(
+                  onRefresh: getData,
+                  child: ListView.builder(
+                      itemCount: companiesData.length,
+                      itemBuilder: (BuildContext context, int index) =>
+                          Container(
                             width: MediaQuery.of(context).size.width,
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: 55,
-                                      height: 55,
-                                      child: CircleAvatar(
-                                        backgroundColor: Colors.amber,
-                                        backgroundImage: NetworkImage(
-                                          name[index]["imageUrl"],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Column(
+                                horizontal: 10, vertical: 5),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) => CompanyDetails(
+                                            companiesData[index]["name"],
+                                            index)));
+                              },
+                              child: Card(
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(name[index]["name"],
-                                            style: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold)),
-                                        const SizedBox(height: 8),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              width: 55,
+                                              height: 55,
+                                              child: CircleAvatar(
+                                                backgroundColor: Colors.amber,
+                                                backgroundImage: NetworkImage(
+                                                  companiesData[index]
+                                                      ["imageUrl"],
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 16),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                    companiesData[index]
+                                                        ["name"],
+                                                    style: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                                const SizedBox(height: 8),
+                                                Text(
+                                                    "ContactNo: " +
+                                                        companiesData[index]
+                                                            ["contactNo"],
+                                                    style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 16,
+                                                    )),
+                                                const SizedBox(height: 8),
+                                              ],
+                                            )
+                                          ],
+                                        )
                                       ],
-                                    )
-                                  ],
-                                )
-                              ],
-                            )),
-                      ),
-                    ),
-                  )),
+                                    )),
+                              ),
+                            ),
+                          )),
+                ),
     );
   }
 }

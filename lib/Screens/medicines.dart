@@ -11,17 +11,17 @@ class Medicines extends StatefulWidget {
 }
 
 class _MedicinesState extends State<Medicines> {
-  bool isLoading=false;
-  List name=[];
+  bool isLoading = false;
+  List medicineData = [];
   Future getData() async {
     var url = 'https://dbmsapi.herokuapp.com/api/medicine/getMedicines';
     var response = await http.get(Uri.parse(url));
 
     Map Data = json.decode(response.body);
-    name = Data["medicines"];
+    medicineData = Data["medicines"];
   }
 
-   @override
+  @override
   void initState() {
     setState(() {
       isLoading = true;
@@ -33,7 +33,7 @@ class _MedicinesState extends State<Medicines> {
     });
     super.initState();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,115 +45,127 @@ class _MedicinesState extends State<Medicines> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : ListView.builder(
-              itemCount: name.length,
-              itemBuilder: (BuildContext context, int index) => Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: Card(
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
+          : medicineData.isEmpty
+              ? const Center(
+                  child: Text("No Medicines Available At This Moment"),
+                )
+              : ListView.builder(
+                  itemCount: medicineData.length,
+                  itemBuilder: (BuildContext context, int index) => Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
+                        child: GestureDetector(
+                          onTap: () {},
+                          child: Card(
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    SizedBox(
-                                      width: 55,
-                                      height: 55,
-                                      child: CircleAvatar(
-                                        backgroundColor: Colors.amber,
-                                        backgroundImage: NetworkImage(
-                                          name[index]
-                                              ["imageUrl"],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Column(
+                                    Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                            name[index]
-                                                ["name"],
-                                            style: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold)),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                            name[index]
-                                                ["expiryDate"],
-                                            style: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold)),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.23),
-                                    Column(
-                                      children: [
-                                        Row(
+                                        SizedBox(
+                                          width: 55,
+                                          height: 55,
+                                          child: CircleAvatar(
+                                            backgroundColor: Colors.amber,
+                                            backgroundImage: NetworkImage(
+                                              medicineData[index]["imageUrl"],
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 16),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            const Text("Quantity :",
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            Text(
-                                                name[index]
-                                                    ["quantity"],
+                                            Text(medicineData[index]["name"],
                                                 style: const TextStyle(
                                                     color: Colors.black,
-                                                    fontSize: 14,
+                                                    fontSize: 18,
                                                     fontWeight:
                                                         FontWeight.bold)),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                                "Expiry Date: " +
+                                                    medicineData[index]
+                                                        ["expiryDate"],
+                                                style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                )),
                                           ],
                                         ),
-                                        SizedBox(height: MediaQuery.of(context).size.height*0.02,),
-                                        Row(
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.15,
+                                        ),
+                                        Column(
                                           children: [
-                                            const Text("MRP :",
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            Text(
-                                                name[index]
-                                                    ["mrp"],
-                                                style: const TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                const Text("Quantity :",
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                                Text(
+                                                    medicineData[index]
+                                                        ["quantity"],
+                                                    style: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.02,
+                                            ),
+                                            Row(
+                                              children: [
+                                                const Text("MRP :",
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                                Text(medicineData[index]["mrp"],
+                                                    style: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                              ],
+                                            ),
                                           ],
                                         ),
                                       ],
-                                    ),
+                                    )
                                   ],
-                                )
-                              ],
-                            )),
-                      ),
-                    ),
-                  )),
+                                )),
+                          ),
+                        ),
+                      )),
     );
   }
 }
