@@ -42,10 +42,7 @@ class _HomePageState extends State<HomePage> {
       //     backgroundColor: Colors.amber
       //   )
       // ],) ,
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () {},
-      ),
+
       body: _isLoading
           ? const Center(
               child: CircularProgressIndicator(),
@@ -60,7 +57,7 @@ class _HomePageState extends State<HomePage> {
         return const MedicalStore();
       case 2:
         return const Medicines();
-        case 3:
+      case 3:
         return const Others();
       default:
         return const CompanyScreen();
@@ -83,12 +80,12 @@ class _HomePageState extends State<HomePage> {
             inactiveColor: Colors.black),
         BottomNavyBarItem(
             icon: const Icon(Icons.store_mall_directory),
-            title: const Text('Medical Store'),
+            title: const Text('Stores'),
             activeColor: Colors.amber,
             inactiveColor: Colors.black),
         BottomNavyBarItem(
             icon: const Icon(Icons.medication),
-            title: const Text('Mediciens'),
+            title: const Text('Medicines'),
             activeColor: Colors.amber,
             inactiveColor: Colors.black),
         BottomNavyBarItem(
