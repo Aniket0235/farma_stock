@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:farma_stock/Screens/company_screen.dart';
+import 'package:farma_stock/Screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -49,7 +50,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
         leading: GestureDetector(
             onTap: () {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => const CompanyScreen()));
+                  builder: (context) => const HomePage()));
             },
             child: const Icon(Icons.arrow_back)),
         backgroundColor: Colors.amber,

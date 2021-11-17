@@ -1,3 +1,4 @@
+import 'package:farma_stock/Screens/company_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'Screens/home_page.dart';

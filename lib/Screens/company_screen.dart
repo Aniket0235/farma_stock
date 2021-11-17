@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'package:farma_stock/Screens/company_details.dart';
+import 'package:farma_stock/Screens/form.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class CompanyScreen extends StatefulWidget {
+  
   const CompanyScreen({Key? key}) : super(key: key);
 
   @override
@@ -42,7 +44,10 @@ class _CompanyScreenState extends State<CompanyScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const FormCompany()));
+        },
       ),
       appBar: AppBar(
         title: const Text("Companies"),
