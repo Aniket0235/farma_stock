@@ -1,26 +1,24 @@
 import 'dart:convert';
-
-import 'package:farma_stock/Screens/company_details.dart';
-import 'package:farma_stock/Screens/comapny_form.dart';
+import 'package:farma_stock/Screens/order_tostore_form.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class CompanyScreen extends StatefulWidget {
-  const CompanyScreen({Key? key}) : super(key: key);
+class SupplyMedicines extends StatefulWidget {
+  SupplyMedicines({Key? key}) : super(key: key);
 
   @override
-  State<CompanyScreen> createState() => _CompanyScreenState();
+  _SupplyMedicinesState createState() => _SupplyMedicinesState();
 }
 
-class _CompanyScreenState extends State<CompanyScreen> {
-  List companiesData = [];
+class _SupplyMedicinesState extends State<SupplyMedicines> {
+  List msData = [];
   bool isLoading = false;
   Future getData() async {
-    var url = 'https://dbmsapi.herokuapp.com/api/company/getCompanies';
+    var url = 'https://dbmsapi.herokuapp.com/api/medicine/getStores';
     var response = await http.get(Uri.parse(url));
 
     Map Data = json.decode(response.body);
-    companiesData = Data["companies"];
+    msData = Data["stores"];
   }
 
   @override
@@ -41,42 +39,35 @@ class _CompanyScreenState extends State<CompanyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () {
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const FormCompany()));
-        },
-      ),
       appBar: AppBar(
-        title: const Text("Companies"),
         backgroundColor: Colors.amber,
+        title: Text("Choose A Store"),
       ),
       body: isLoading
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : companiesData.isEmpty
+          : msData.isEmpty
               ? const Center(
-                  child: Text("No Companies Available At This Moment"),
+                  child: Text("No Medical Stores Available At This Moment"),
                 )
-              : RefreshIndicator(
-                  onRefresh: getData,
+              : SafeArea(
+                  child: Container(
                   child: ListView.builder(
-                      itemCount: companiesData.length,
-                      itemBuilder: (BuildContext context, int index) =>
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (context) => CompanyDetails(
-                                            companiesData[index]["name"],
-                                            index)));
-                              },
+                      itemCount: msData.length,
+                      itemBuilder: (context, index) => GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => OrderForm(
+                                        storeId: msData[index]["_id"]),
+                                  ));
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
                               child: Card(
                                 elevation: 5,
                                 shape: RoundedRectangleBorder(
@@ -96,14 +87,13 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Container(
+                                            SizedBox(
                                               width: 55,
                                               height: 55,
                                               child: CircleAvatar(
                                                 backgroundColor: Colors.amber,
                                                 backgroundImage: NetworkImage(
-                                                  companiesData[index]
-                                                      ["imageUrl"],
+                                                  msData[index]["imageUrl"],
                                                 ),
                                               ),
                                             ),
@@ -112,9 +102,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Text(
-                                                    companiesData[index]
-                                                        ["name"],
+                                                Text(msData[index]["name"],
                                                     style: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 18,
@@ -122,14 +110,14 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                                             FontWeight.bold)),
                                                 const SizedBox(height: 8),
                                                 Text(
-                                                    "ContactNo: " +
-                                                        companiesData[index]
+                                                    "Contact Number: " +
+                                                        msData[index]
                                                             ["contactNo"],
                                                     style: const TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 16,
                                                     )),
-                                                const SizedBox(height: 8),
+                                                SizedBox(height: 8),
                                               ],
                                             )
                                           ],
@@ -139,7 +127,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
                               ),
                             ),
                           )),
-                ),
+                )),
     );
   }
 }

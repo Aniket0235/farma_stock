@@ -1,3 +1,4 @@
+import 'package:farma_stock/Screens/add_store_form.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -39,8 +40,17 @@ class _MedicalStoreState extends State<MedicalStore> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () {},
+        backgroundColor: Colors.amber,
+        child: const Icon(
+          Icons.add,
+        ),
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const StoreForm(),
+              ));
+        },
       ),
       appBar: AppBar(
         title: const Text("Medical Stores"),

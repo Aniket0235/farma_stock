@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:farma_stock/Screens/take_and_supply.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -37,6 +38,16 @@ class _MedicinesState extends State<Medicines> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TakeAndSupplyMedicines(),
+              ));
+        },
+        child: const Icon(Icons.add),
+      ),
       appBar: AppBar(
         title: const Text("Medicines"),
         backgroundColor: Colors.amber,
@@ -54,7 +65,7 @@ class _MedicinesState extends State<Medicines> {
                   itemBuilder: (BuildContext context, int index) => Container(
                         width: MediaQuery.of(context).size.width,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
+                            horizontal: 8, vertical: 5),
                         child: GestureDetector(
                           onTap: () {},
                           child: Card(
@@ -65,13 +76,15 @@ class _MedicinesState extends State<Medicines> {
                             child: Container(
                                 width: double.infinity,
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 10),
+                                    horizontal: 4, vertical: 10),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
@@ -111,13 +124,15 @@ class _MedicinesState extends State<Medicines> {
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
-                                              0.15,
+                                              0.1,
                                         ),
                                         Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
                                           children: [
                                             Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
+                                                  MainAxisAlignment.end,
                                               children: [
                                                 const Text("Quantity :",
                                                     style: TextStyle(

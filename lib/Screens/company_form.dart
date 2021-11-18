@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:farma_stock/Screens/User/data2.dart';
 import 'package:farma_stock/Screens/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
 class FormCompany extends StatefulWidget {
@@ -12,65 +12,50 @@ class FormCompany extends StatefulWidget {
 }
 
 class _FormCompanyState extends State<FormCompany> {
-   @override
+  @override
   void dispose() {
     _nameFocusNode.dispose();
     _directorFocusNode.dispose();
     _imageUrlFocusNode.dispose();
     super.dispose();
   }
+
   final TextEditingController nameC = TextEditingController();
   final TextEditingController conta = TextEditingController();
   final TextEditingController imageUrlC = TextEditingController();
   final _nameFocusNode = FocusNode();
   final _directorFocusNode = FocusNode();
   final _imageUrlFocusNode = FocusNode();
-  late Welcome _welcome;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  void validate() {
-    if (formkey.currentState!.validate()) {
-      print("validated");
-    } else {
-      print("Not validated");
-    }
-  }
 
-    Future<Welcome?> getData(String name, String imageurl,String contactno,) async {
-      print(name);
-      print(contactno);
-      print(imageurl);
-  
-    final result = await http.post(
-        Uri.parse(
-            "https://dbmsapi.herokuapp.com/api/company/addCompany"),
-        body: jsonEncode({"name": name, "imageUrl": imageurl,"contactNo":contactno,}),
-        headers:{"Content-Type":"application/json"} );
-      var data =result.body;
-      print(data);
-
-      // if (result.statusCode==201){
-      //   String resultString =result.body;
-      //   welcomeFromJson(resultString);
-      //   print(resultString);
-      // }else {
-      //   return null;
-      // }
-      return welcomeFromJson(data);
-    //  return jsonDecode(result.body) as Map;
+  Future getData(
+    String name,
+    String imageurl,
+    String contactno,
+  ) async {
+    final result = await http
+        .post(Uri.parse("https://dbmsapi.herokuapp.com/api/company/addCompany"),
+            body: jsonEncode({
+              "name": name,
+              "imageUrl": imageurl,
+              "contactNo": contactno,
+            }),
+            headers: {"Content-Type": "application/json"});
+    return json.decode(result.body) as Map;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-         leading: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => const HomePage()));
-            },
-            child: const Icon(Icons.arrow_back)),
-        backgroundColor:Colors.red
-      ),
+          title: const Text("Register Your Company"),
+          leading: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => const HomePage()));
+              },
+              child: const Icon(Icons.arrow_back)),
+          backgroundColor: Colors.red),
       body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Form(
@@ -101,7 +86,7 @@ class _FormCompanyState extends State<FormCompany> {
       },
       validator: (value) {
         if (value!.isEmpty) {
-          return "Please Enter name of movie";
+          return "Please Enter The Name of Company";
         }
         return null;
       });
@@ -119,7 +104,7 @@ class _FormCompanyState extends State<FormCompany> {
       },
       validator: (value) {
         if (value!.isEmpty) {
-          return 'Please Enter name of director';
+          return 'Please Enter The Contact Number';
         }
         return null;
       });
@@ -137,7 +122,7 @@ class _FormCompanyState extends State<FormCompany> {
             decoration: BoxDecoration(
                 border: Border.all(width: 1), color: Colors.white10),
             child: imageUrlC.text.isEmpty
-                ? const Center(child: Text('image preview'))
+                ? const Center(child: Text('Image Preview'))
                 : FittedBox(
                     child: Image.network(
                       imageUrlC.text,
@@ -151,7 +136,7 @@ class _FormCompanyState extends State<FormCompany> {
           focusNode: _imageUrlFocusNode,
           controller: imageUrlC,
           decoration: InputDecoration(
-              labelText: 'imageUrl',
+              labelText: 'ImageUrl',
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
           textInputAction: TextInputAction.done,
@@ -175,9 +160,9 @@ class _FormCompanyState extends State<FormCompany> {
         ))
       ]);
 
- Widget buildDone() => Builder(
+  Widget buildDone() => Builder(
       builder: (context) => MaterialButton(
-        child: const Text(
+          child: const Text(
             'Submit',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
@@ -188,12 +173,21 @@ class _FormCompanyState extends State<FormCompany> {
           color: Colors.red,
           textColor: Colors.white,
           onPressed: () async {
-            String name=nameC.text.toString();
-            String contactno =conta.text.toString();
-            String imageurl =imageUrlC.text.toString();
-            Welcome? data =await getData(name, imageurl, contactno);
-            setState(() {
-              _welcome =data!;
-            });
+            String name = nameC.text.toString();
+            String contactno = conta.text.toString();
+            String imageurl = imageUrlC.text.toString();
+            var data = await getData(name, imageurl, contactno);
+            if (data != null) {
+              if (data["success"] == 1) {
+                Fluttertoast.showToast(msg: "DataBase Updated Successfully");
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HomePage(),
+                    ));
+              } else {
+                Fluttertoast.showToast(msg: "Something Went Wrong");
+              }
+            }
           }));
 }

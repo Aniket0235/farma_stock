@@ -2,17 +2,18 @@ import 'dart:convert';
 
 import 'package:farma_stock/Screens/company_details.dart';
 import 'package:farma_stock/Screens/comapny_form.dart';
+import 'package:farma_stock/Screens/order_from_company_form.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class CompanyScreen extends StatefulWidget {
-  const CompanyScreen({Key? key}) : super(key: key);
+class OrderFromCompany extends StatefulWidget {
+  const OrderFromCompany({Key? key}) : super(key: key);
 
   @override
-  State<CompanyScreen> createState() => _CompanyScreenState();
+  State<OrderFromCompany> createState() => _OrderFromCompanyState();
 }
 
-class _CompanyScreenState extends State<CompanyScreen> {
+class _OrderFromCompanyState extends State<OrderFromCompany> {
   List companiesData = [];
   bool isLoading = false;
   Future getData() async {
@@ -49,7 +50,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
         },
       ),
       appBar: AppBar(
-        title: const Text("Companies"),
+        title: const Text("Choose A Company"),
         backgroundColor: Colors.amber,
       ),
       body: isLoading
@@ -71,11 +72,14 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                 horizontal: 10, vertical: 5),
                             child: GestureDetector(
                               onTap: () {
-                                Navigator.of(context).pushReplacement(
+                                Navigator.push(
+                                    context,
                                     MaterialPageRoute(
-                                        builder: (context) => CompanyDetails(
-                                            companiesData[index]["name"],
-                                            index)));
+                                      builder: (context) =>
+                                          OrderFromCompanyForm(
+                                        companyId: companiesData[index]["_id"],
+                                      ),
+                                    ));
                               },
                               child: Card(
                                 elevation: 5,

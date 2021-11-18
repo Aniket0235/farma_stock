@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:farma_stock/Screens/company_screen.dart';
 import 'package:farma_stock/Screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -9,7 +7,7 @@ import 'package:http/http.dart' as http;
 class CompanyDetails extends StatefulWidget {
   String companyName;
   int index;
-  CompanyDetails(this.companyName,this.index, {Key? key}) : super(key: key);
+  CompanyDetails(this.companyName, this.index, {Key? key}) : super(key: key);
 
   @override
   _CompanyDetailsState createState() => _CompanyDetailsState();
@@ -49,8 +47,8 @@ class _CompanyDetailsState extends State<CompanyDetails> {
         title: Text(widget.companyName),
         leading: GestureDetector(
             onTap: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => const HomePage()));
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const HomePage()));
             },
             child: const Icon(Icons.arrow_back)),
         backgroundColor: Colors.amber,
@@ -140,7 +138,12 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                         FontWeight.bold)),
                                           ],
                                         ),
-                                        SizedBox(height: MediaQuery.of(context).size.height*0.02,),
+                                        SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.02,
+                                        ),
                                         Row(
                                           children: [
                                             const Text("MRP :",
