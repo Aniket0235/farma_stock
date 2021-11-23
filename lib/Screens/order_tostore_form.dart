@@ -19,8 +19,6 @@ class _OrderFormState extends State<OrderForm> {
   bool loading = false;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
-  final TextEditingController contactController = TextEditingController();
-  final TextEditingController imageController = TextEditingController();
   final _nameFocusNode = FocusNode();
   // final _directorFocusNode = FocusNode();
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
@@ -50,6 +48,7 @@ class _OrderFormState extends State<OrderForm> {
         headers: {"Content-Type": "application/json"});
 
     Map Data = json.decode(response.body);
+    print(Data);
     if (Data["success"] == 1) {
       Fluttertoast.showToast(msg: "Order Placed");
     } else {
@@ -225,24 +224,4 @@ class _OrderFormState extends State<OrderForm> {
           return "Quantity Exceeded";
         }
         return null;
-      });
-
-  // Widget buildDirectorName() => TextFormField(
-  //     controller: contactController,
-  //     decoration: InputDecoration(
-  //       labelText: 'Contact No.',
-  //       border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-  //     ),
-  //     textInputAction: TextInputAction.next,
-  //     keyboardType: TextInputType.phone,
-  //     focusNode: _directorFocusNode,
-  //     onFieldSubmitted: (_) {
-  //       FocusScope.of(context).requestFocus(_directorFocusNode);
-  //     },
-  //     validator: (value) {
-  //       if (value!.isEmpty) {
-  //         return 'Please Enter The Contact Number';
-  //       }
-  //       return null;
-  //     });
-}
+      });}
