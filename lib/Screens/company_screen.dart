@@ -43,6 +43,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
+        backgroundColor: Colors.amber,
         onPressed: () {
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => const FormCompany()));
